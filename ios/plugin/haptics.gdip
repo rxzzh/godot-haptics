@@ -8,7 +8,7 @@ deinitialization="unregister_haptics_types"
 [dependencies]
 linked=[]
 embedded=[]
-system=[]
+system=["CoreHaptics.framework", "UIKit.framework", "AVFoundation.framework"]
 
 capabilities=[]
 
