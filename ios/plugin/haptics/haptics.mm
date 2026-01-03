@@ -200,13 +200,18 @@ void Haptics::init_haptic_engine() {
     }
 
     // Configure engine to auto-restart if it stops
+    // Note: We capture engine directly since self-> doesn't work in ObjC blocks
+    // from C++
+    __weak CHHapticEngine *weakEngine = engine;
     engine.resetHandler = ^{
-      NSError *startError = nil;
-      [(__bridge CHHapticEngine *)self->haptic_engine
-          startAndReturnError:&startError];
-      if (startError) {
-        NSLog(@"[Haptics] Failed to restart haptic engine: %@",
-              startError.localizedDescription);
+      CHHapticEngine *strongEngine = weakEngine;
+      if (strongEngine) {
+        NSError *startError = nil;
+        [strongEngine startAndReturnError:&startError];
+        if (startError) {
+          NSLog(@"[Haptics] Failed to restart haptic engine: %@",
+                startError.localizedDescription);
+        }
       }
     };
 
